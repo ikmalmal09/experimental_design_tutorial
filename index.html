@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial 1 · Introduction to Experimental Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ef; --card:#fff; --ink:#1d2433; --muted:#5d6577; --line:#e3dfd5;
+  --accent:#1f6f5c; --accent-soft:#e2f0eb; --warn:#b5462f; --warn-soft:#f8e4df;
+  --A:#2f6db5; --B:#d08a1e; --C:#8a3fa6;
+  --radius:14px;
+}
+*{box-sizing:border-box}
+html{font-size:18px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.5}
+header{background:var(--ink);color:#fff;padding:22px 32px 0}
+header .kicker{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+header h1{font-family:Fraunces,serif;font-weight:700;margin:4px 0 4px;font-size:2rem}
+header .meta{opacity:.75;font-size:.85rem;margin-bottom:16px}
+nav{display:flex;gap:4px;overflow-x:auto}
+nav button{background:transparent;border:0;color:#cfd5e2;font:600 .85rem Inter;padding:12px 16px;border-radius:10px 10px 0 0;cursor:pointer;white-space:nowrap}
+nav button:hover{color:#fff}
+nav button.on{background:var(--bg);color:var(--ink)}
+.bar{display:flex;justify-content:flex-end;gap:10px;align-items:center;padding:10px 32px 0;font-size:.8rem;color:var(--muted)}
+.toggle{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+.toggle input{accent-color:var(--accent);width:18px;height:18px}
+main{max-width:1180px;margin:0 auto;padding:12px 32px 60px}
+section.view{display:none}
+section.view.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+h2{font-family:Fraunces,serif;font-size:1.6rem;margin:18px 0 4px}
+h2 small{font-family:Inter;font-size:.8rem;color:var(--muted);font-weight:500;margin-left:8px}
+.scenario{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:var(--radius);padding:16px 20px;margin:12px 0 18px}
+.scenario ul{margin:6px 0 0;padding-left:20px}
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px}
+.card h3{margin:0 0 10px;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.q{border-top:1px solid var(--line);padding:12px 0}
+.q:first-of-type{border-top:0;padding-top:0}
+.q .stem{display:flex;gap:10px}
+.q .lbl{font-weight:700;color:var(--accent);min-width:1.3em}
+.q .mk{color:var(--muted);font-size:.8rem;white-space:nowrap}
+.reveal{margin-top:8px;margin-left:1.9em;font:600 .75rem Inter;border:1px solid var(--line);background:#faf9f6;color:var(--muted);padding:5px 12px;border-radius:999px;cursor:pointer}
+.reveal:hover{border-color:var(--accent);color:var(--accent)}
+.ans{display:none;margin:8px 0 0 1.9em;background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:.92rem}
+.ans.show{display:block;animation:fade .2s}
+.btn{font:600 .85rem Inter;border:0;background:var(--accent);color:#fff;padding:9px 16px;border-radius:10px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.seg{display:inline-flex;background:#efece4;border-radius:10px;padding:3px}
+.seg button{font:600 .8rem Inter;border:0;background:transparent;padding:7px 12px;border-radius:8px;cursor:pointer;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px #0002}
+.note{font-size:.85rem;color:var(--muted)}
+.big{font-family:Fraunces,serif;font-size:2.2rem;font-weight:700;line-height:1}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:600}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;margin:8px 0}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.callout{border-radius:10px;padding:10px 14px;font-size:.9rem;margin-top:10px}
+.callout.bad{background:var(--warn-soft);color:#6d2618}
+.callout.good{background:var(--accent-soft);color:#14493c}
+.mono{font-family:"JetBrains Mono",monospace}
+
+/* Matching */
+.match{display:grid;grid-template-columns:1fr 1.6fr;gap:18px}
+@media(max-width:900px){.match{grid-template-columns:1fr}}
+.term,.desc{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.term:hover,.desc:hover{border-color:#b9c3d6}
+.term.sel{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.term .n,.desc .l{font:700 .8rem "JetBrains Mono";background:#efece4;border-radius:6px;padding:2px 7px}
+.term .slot{margin-left:auto;font:700 .9rem "JetBrains Mono";min-width:2em;text-align:center;border-radius:6px;padding:2px 6px;background:#f6f4ef;color:var(--muted)}
+.term .slot.filled{background:var(--ink);color:#fff}
+.term.right .slot{background:var(--accent)}
+.term.wrong .slot{background:var(--warn)}
+.desc.used{opacity:.45}
+.desc{font-size:.9rem}
+.score{font-weight:700}
+
+/* SVG generic */
+svg text{font-family:Inter}
+.tank,.pot,.plant{cursor:pointer}
+table.vals{border-collapse:collapse;font-size:.85rem;width:100%}
+table.vals td,table.vals th{padding:5px 8px;border-bottom:1px solid var(--line);text-align:center}
+table.vals th{color:var(--muted);font-weight:600}
+.fgrid{display:grid;gap:8px;margin-top:10px}
+.fcell{border-radius:10px;padding:10px;text-align:center;font-size:.85rem;font-weight:600;background:#eef3fa;border:1.5px solid #d4e0f0}
+.fhead{font-size:.75rem;font-weight:700;color:var(--muted);text-align:center;align-self:end}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+footer{text-align:center;color:var(--muted);font-size:.75rem;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">Experimental Design · Tutorial 1</div>
+  <h1 style="margin-bottom:18px">Introduction to Experimental Design</h1>
+  <nav id="nav">
+    <button data-v="a" class="on">Matching</button>
+    <button data-v="q3">Q1 · Replicates</button>
+    <button data-v="q4">Q2 · Factors</button>
+    <button data-v="q5">Q3 · Components</button>
+    <button data-v="q6">Q4 · EU vs OU</button>
+    <button data-v="q7">Q5 · Confounding</button>
+  </nav>
+</header>
+<div class="bar">
+  <label class="toggle"><input type="checkbox" id="keyToggle"> 🔒 Show all answers (lecturer mode)</label>
+</div>
+<main>
+
+<!-- ========== SECTION A ========== -->
+<section class="view on" id="v-a">
+  <h2>Matching Keywords <small>10 marks</small></h2>
+  <p class="note">Click a keyword on the left, then click its description on the right. Click a matched keyword again to clear it.</p>
+  <div class="match">
+    <div id="terms"></div>
+    <div id="descs"></div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" id="mCheck">Check answers</button>
+    <button class="btn ghost" id="mReset">Reset</button>
+    <button class="btn ghost" id="mShow">Show answer key</button>
+    <span class="score" id="mScore" style="align-self:center;margin-left:8px"></span>
+  </div>
+</section>
+
+<!-- ========== Q3 ========== -->
+<section class="view" id="v-q3">
+  <h2>Question 1: Biological and Technical Replicates <small>5 marks</small></h2>
+  <div class="scenario">A researcher investigates the <b>nitrogen content of tomato leaves</b>. Leaves are collected from <b>three independent tomato plants</b> receiving the same fertilizer treatment. Each leaf sample is analysed <b>three times</b> using the same laboratory instrument.</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Explore the sampling structure</h3>
+      <div class="seg" id="q3seg">
+        <button class="on" data-m="all">Whole design</button>
+        <button data-m="bio">Highlight biological</button>
+        <button data-m="tech">Highlight technical</button>
+      </div>
+      <svg id="q3svg" viewBox="0 0 600 330" width="100%"></svg>
+      <div class="btnrow"><button class="btn ghost" id="q3sim">Simulate new lab readings</button></div>
+      <table class="vals" id="q3tbl"></table>
+      <div class="callout good" id="q3msg"></div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="q" data-q><div class="stem"><span class="lbl">a</span><span>Identify the number of biological replicates. <span class="mk">(1 mark)</span></span></div>
+        <div class="ans"><b>3</b> — the three independent tomato plants.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">b</span><span>Identify the number of technical measurements per biological replicate. <span class="mk">(1 mark)</span></span></div>
+        <div class="ans"><b>3</b> — each leaf sample is analysed three times.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">c</span><span>Explain why three measurements from the same leaf sample cannot be considered three biological replicates. <span class="mk">(2 marks)</span></span></div>
+        <div class="ans">They come from the <b>same plant / same sample</b>, so they are not independent. They only reflect <b>measurement (instrument) precision</b>, not the natural variation between plants. Treating them as biological replicates is <b>pseudoreplication</b> and would underestimate experimental error.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">d</span><span>Which type of replication is essential for making valid statistical inferences about treatment effects? <span class="mk">(1 mark)</span></span></div>
+        <div class="ans"><b>Biological replication</b> (independent experimental units).</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q4 ========== -->
+<section class="view" id="v-q4">
+  <h2>Question 2: Factors, Levels and Treatments <small>5 marks</small></h2>
+  <div class="scenario">A researcher wants to investigate the effects of <b>water temperature</b> and <b>UV radiation</b> on <b>fish growth</b>.
+    <ul><li>Water temperature: 25°C and 30°C</li><li>UV radiation: Low and High</li></ul></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Treatment combination builder</h3>
+      <p class="note">Change the number of levels to see how treatment combinations multiply. Reset to match the scenario.</p>
+      <div style="display:flex;gap:28px;flex-wrap:wrap">
+        <div><b style="color:var(--A)">Temperature</b> levels: <span class="stepper"><button data-f="t" data-d="-1">−</button><span id="tN" class="mono">2</span><button data-f="t" data-d="1">+</button></span></div>
+        <div><b style="color:var(--B)">UV radiation</b> levels: <span class="stepper"><button data-f="u" data-d="-1">−</button><span id="uN" class="mono">2</span><button data-f="u" data-d="1">+</button></span></div>
+      </div>
+      <div id="fgrid" class="fgrid"></div>
+      <p style="margin:14px 0 0"><span class="big" id="fCount">4</span> <span class="note" id="fExpr">treatment combinations = 2 × 2</span></p>
+      <div class="btnrow"><button class="btn ghost" id="fReset">Reset to scenario</button></div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="q" data-q><div class="stem"><span class="lbl">a</span><span>Identify the TWO factors in this experiment. <span class="mk">(2 marks)</span></span></div>
+        <div class="ans">(1) <b>Water temperature</b> and (2) <b>UV radiation</b>.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">b</span><span>State the levels of each factor. <span class="mk">(2 marks)</span></span></div>
+        <div class="ans">Temperature: <b>25°C, 30°C</b> (2 levels). UV radiation: <b>Low, High</b> (2 levels).</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">c</span><span>How many treatment combinations are available in this experiment? <span class="mk">(1 mark)</span></span></div>
+        <div class="ans"><b>4</b> (2 × 2 factorial): 25°C-Low, 25°C-High, 30°C-Low, 30°C-High.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q5 ========== -->
+<section class="view" id="v-q5">
+  <h2>Question 3: Identifying Experimental Components <small>8 marks</small></h2>
+  <div class="scenario">A researcher investigates the effects of <b>three nitrogen-fixing bacterial species</b> on the <b>nitrogen content of tomato plants</b>. <b>Nine pots</b> are used, with each bacterial species assigned to <b>three pots</b>. Pots are kept under similar environmental conditions.</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>The nine pots</h3>
+      <div class="legend"><span style="--c:var(--A)">Species 1</span><span style="--c:var(--B)">Species 2</span><span style="--c:var(--C)">Species 3</span></div>
+      <svg id="q5svg" viewBox="0 0 600 260" width="100%"></svg>
+      <div class="btnrow">
+        <button class="btn" id="q5rand">Randomize assignment</button>
+        <button class="btn ghost" id="q5sys">Systematic (in rows)</button>
+      </div>
+      <p class="note">Click any pot: one pot = one tomato plant = one inoculation = <b>one experimental unit</b>.</p>
+      <div class="callout good" id="q5msg">3 treatments × 3 replicates = 9 experimental units.</div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="q" data-q><div class="stem"><span class="lbl">a</span><span>Identify the independent variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Bacterial species</b> (type of nitrogen-fixing bacteria).</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">b</span><span>Identify the dependent variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Nitrogen content</b> of the tomato plants.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">c</span><span>Identify the experimental unit. <span class="mk">(2)</span></span></div><div class="ans">The <b>pot</b> (containing a tomato plant) — the unit to which a bacterial species is applied.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">d</span><span>How many treatments are included? <span class="mk">(1)</span></span></div><div class="ans"><b>3</b> (one per bacterial species).</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">e</span><span>How many replications per treatment? <span class="mk">(1)</span></span></div><div class="ans"><b>3</b> pots per species.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">f</span><span>Explain why pots are considered experimental units. <span class="mk">(2)</span></span></div><div class="ans">Each pot <b>independently receives one treatment</b> (one bacterial species), and pots can be assigned to treatments <b>independently of one another</b>. Any two pots could receive different species, so the pot is the smallest unit to which a treatment is applied.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q6 ========== -->
+<section class="view" id="v-q6">
+  <h2>Question 4: Experimental Unit vs Observational Unit <small>6 marks</small></h2>
+  <div class="scenario">Effect of different <b>feeding regimes</b> on fish growth.
+    <ul><li>Twelve fish tanks are used.</li><li>Each tank receives one of three feeding regimes.</li><li>Ten fish are maintained in each tank.</li><li>Individual fish body weights are measured after 30 days.</li></ul></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>What are we counting?</h3>
+      <div class="seg" id="q6seg">
+        <button class="on" data-m="tank">Count experimental units</button>
+        <button data-m="fish">Count observational units</button>
+      </div>
+      <div class="legend"><span style="--c:var(--A)">Regime 1</span><span style="--c:var(--B)">Regime 2</span><span style="--c:var(--C)">Regime 3</span></div>
+      <svg id="q6svg" viewBox="0 0 600 300" width="100%"></svg>
+      <div style="display:flex;gap:28px;align-items:end;margin-top:6px">
+        <div><div class="big" id="q6n">12</div><div class="note" id="q6lbl">tanks (experimental units)</div></div>
+        <div><div class="big" id="q6r">4</div><div class="note">true replicates per regime</div></div>
+      </div>
+      <div class="callout" id="q6msg"></div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="q" data-q><div class="stem"><span class="lbl">a</span><span>Identify the experimental unit. <span class="mk">(2)</span></span></div><div class="ans">The <b>fish tank</b> — the feeding regime is applied to the whole tank.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">b</span><span>Identify the observational unit. <span class="mk">(2)</span></span></div><div class="ans">The <b>individual fish</b> — body weight is measured on each fish.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">c</span><span>Identify the response variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Fish body weight</b> (growth) after 30 days.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">d</span><span>Explain why the number of fish measured does not necessarily represent the number of independent experimental replicates. <span class="mk">(1)</span></span></div><div class="ans">Fish in the same tank <b>share the same treatment application and tank environment</b>, so they are not independent. Replication is at tank level: <b>12 tanks ÷ 3 regimes = 4 replicates</b>, not 120 fish (treating fish as replicates = pseudoreplication).</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== Q7 ========== -->
+<section class="view" id="v-q7">
+  <h2>Question 5: Identifying Variables and Confounding Factors <small>6 marks</small></h2>
+  <div class="scenario">Effect of fertilizer on <b>chilli plant growth</b>. The researcher applies <b style="color:var(--A)">Fertilizer A</b> to plants <b>near a window</b>, <b style="color:var(--C)">Fertilizer B</b> to plants <b>far from the window</b>, and <b style="color:var(--B)">Fertilizer C</b> to plants in the <b>middle</b> of the greenhouse. After four weeks, Fertilizer A produces the highest growth.</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Greenhouse simulator</h3>
+      <div class="seg" id="q7seg">
+        <button class="on" data-m="orig">Researcher's layout</button>
+        <button data-m="crd">Completely randomized</button>
+        <button data-m="rcbd">Blocked by distance</button>
+      </div>
+      <svg id="q7svg" viewBox="0 0 600 270" width="100%"></svg>
+      <label class="toggle note" style="margin:6px 0"><input type="checkbox" id="q7eq" checked> <span>In this simulation the three fertilizers are <b>truly identical</b> — only light differs</span></label>
+      <div class="btnrow"><button class="btn" id="q7run">Grow for 4 weeks</button></div>
+      <svg id="q7bar" viewBox="0 0 600 170" width="100%"></svg>
+      <div class="callout" id="q7msg">Press “Grow for 4 weeks” to see the results.</div>
+    </div>
+    <div class="card">
+      <h3>Questions</h3>
+      <div class="q" data-q><div class="stem"><span class="lbl">a</span><span>Identify the independent variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Type of fertilizer</b> (A, B, C).</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">b</span><span>Identify the dependent variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Growth of chilli plants</b> (e.g. plant height or biomass).</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">c</span><span>Identify a possible confounding variable. <span class="mk">(1)</span></span></div><div class="ans"><b>Light intensity / sunlight exposure</b> (position relative to the window); temperature differences across the greenhouse are also acceptable.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">d</span><span>Explain why the results may be biased. <span class="mk">(2)</span></span></div><div class="ans">Each fertilizer is tied to one location, so fertilizer effect is <b>confounded with light</b>. Plants near the window get more light and may grow better regardless of fertilizer — we <b>cannot separate</b> the effect of Fertilizer A from the effect of extra light.</div></div>
+      <div class="q" data-q><div class="stem"><span class="lbl">e</span><span>Suggest ONE way to improve the arrangement. <span class="mk">(1)</span></span></div><div class="ans"><b>Randomize</b> fertilizer allocation across positions, <i>or</i> use <b>blocking</b> by distance from the window (each block — near, middle, far — contains all three fertilizers).</div></div>
+    </div>
+  </div>
+</section>
+</main>
+<div id="pinModal" style="display:none;position:fixed;inset:0;background:#1d243399;z-index:50;align-items:center;justify-content:center">
+  <form id="pinForm" class="card" style="width:320px;text-align:center;box-shadow:0 20px 50px #0004">
+    <div style="font-size:1.8rem">🔒</div>
+    <h3 style="margin:6px 0 4px">Lecturer mode</h3>
+    <p class="note" style="margin:0 0 12px">Enter PIN to show all answers</p>
+    <input id="pinIn" type="password" inputmode="numeric" autocomplete="off" maxlength="8"
+      style="font:700 1.6rem 'JetBrains Mono',monospace;letter-spacing:.4em;text-align:center;width:100%;padding:10px;border:1.5px solid var(--line);border-radius:10px">
+    <div id="pinErr" style="color:var(--warn);font-size:.85rem;height:1.4em;margin-top:6px"></div>
+    <div class="btnrow" style="justify-content:center">
+      <button type="button" class="btn ghost" id="pinCancel">Cancel</button>
+      <button type="submit" class="btn">Unlock</button>
+    </div>
+  </form>
+</div>
+<footer>Tutorial 1 · Introduction to Experimental Design</footer>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const COL={1:'#2f6db5',2:'#d08a1e',3:'#8a3fa6'};
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function txt(parent,x,y,s,attrs={}){const t=el('text',Object.assign({x,y},attrs),parent);t.textContent=s;return t}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+
+/* nav */
+function show(v){$$('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$$('section.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));window.scrollTo({top:0})}
+$$('#nav button').forEach(b=>b.onclick=()=>{show(b.dataset.v);try{history.replaceState(null,'','#'+b.dataset.v)}catch(e){}});
+const h=location.hash.slice(1); if(h && $('#v-'+h)) show(h);
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;const bs=$$('#nav button');const i=bs.findIndex(b=>b.classList.contains('on'));if(e.key==='ArrowRight'&&i<bs.length-1)bs[i+1].click();if(e.key==='ArrowLeft'&&i>0)bs[i-1].click()});
+
+/* reveal buttons */
+$$('[data-q]').forEach(q=>{const a=q.querySelector('.ans');const b=document.createElement('button');b.className='reveal';b.textContent='Reveal answer';b.onclick=()=>{a.classList.toggle('show');b.textContent=a.classList.contains('show')?'Hide answer':'Reveal answer'};a.before(b)});
+const PIN_HASH='3c4dcf6dfc899bd68a7f7961e7ca5a61d2d71d500f9785ddb8d0cbdbb431bcfb';
+function setKey(on){$('#keyToggle').checked=on;$$('.ans').forEach(a=>a.classList.toggle('show',on));$$('.reveal').forEach(b=>b.textContent=on?'Hide answer':'Reveal answer')}
+async function sha(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+function closePin(){$('#pinModal').style.display='none';$('#pinIn').value='';$('#pinErr').textContent=''}
+$('#keyToggle').onchange=e=>{if(!e.target.checked){setKey(false);return}e.target.checked=false;$('#pinModal').style.display='flex';setTimeout(()=>$('#pinIn').focus(),30)};
+$('#pinCancel').onclick=closePin;
+$('#pinModal').onclick=e=>{if(e.target.id==='pinModal')closePin()};
+$('#pinForm').onsubmit=async e=>{e.preventDefault();if(await sha($('#pinIn').value.trim())===PIN_HASH){closePin();setKey(true)}else{$('#pinErr').textContent='Incorrect PIN';$('#pinIn').value='';$('#pinIn').focus()}};
+addEventListener('keydown',e=>{if(e.key==='Escape')closePin()});
+
+/* ===== Section A matching ===== */
+const TERMS=['Independent variable','Dependent variable','Confounding variable','Replication','Randomization','Blocking','Experimental unit','Observational unit','Biological replicate','Technical replicate'];
+const DESCS={A:'Multiple measurements taken from the same experimental unit to assess measurement precision.',B:'The unit to which a particular treatment is applied.',C:'An unwanted factor that may influence the experimental results.',D:'Repetition of treatments in an experiment to estimate experimental error.',E:'The variable measured to determine the outcome of an experiment.',F:'Grouping experimental units based on their similarities to control variation.',G:'Random assignment of experimental units to different treatments.',H:'Factors deliberately manipulated by the researcher.',I:'Independent experimental units receiving the same treatment.',J:'The unit on which the response variable is measured.'};
+const KEY=['H','E','C','D','G','F','B','J','I','A'];
+let picks=Array(10).fill(null), selT=null;
+function renderMatch(){
+  $('#terms').innerHTML=TERMS.map((t,i)=>`<div class="term ${selT===i?'sel':''}" data-i="${i}"><span class="n">${i+1}</span>${t}<span class="slot ${picks[i]?'filled':''}">${picks[i]||'—'}</span></div>`).join('');
+  $('#descs').innerHTML=Object.entries(DESCS).map(([l,d])=>`<div class="desc ${picks.includes(l)?'used':''}" data-l="${l}"><span class="l">${l}</span>${d}</div>`).join('');
+  $$('.term').forEach(e=>e.onclick=()=>{const i=+e.dataset.i;if(picks[i]&&selT!==i){picks[i]=null;selT=i}else selT=selT===i?null:i;$('#mScore').textContent='';renderMatch()});
+  $$('.desc').forEach(e=>e.onclick=()=>{if(selT===null)return;const l=e.dataset.l;const prev=picks.indexOf(l);if(prev>-1)picks[prev]=null;picks[selT]=l;const nxt=picks.findIndex((p,k)=>!p&&k>selT);selT=nxt>-1?nxt:null;$('#mScore').textContent='';renderMatch()});
+}
+renderMatch();
+$('#mCheck').onclick=()=>{let s=0;$$('.term').forEach((e,i)=>{if(!picks[i])return;const ok=picks[i]===KEY[i];s+=ok;e.classList.add(ok?'right':'wrong')});$('#mScore').textContent=`Score: ${s} / 10`};
+$('#mReset').onclick=()=>{picks=Array(10).fill(null);selT=null;$('#mScore').textContent='';renderMatch()};
+$('#mShow').onclick=()=>{picks=KEY.slice();selT=null;renderMatch();$('#mCheck').onclick()};
+
+/* ===== Q3 ===== */
+let q3mode='all', q3data=null;
+function simQ3(){const base=[3.1,3.6,2.8].map(b=>+(b+randn()*0.15).toFixed(2));q3data=base.map(b=>[0,1,2].map(()=>+(b+randn()*0.04).toFixed(2)))}
+function drawQ3(){
+  const s=$('#q3svg');s.innerHTML='';
+  const bio=q3mode==='bio', tech=q3mode==='tech';
+  txt(s,300,22,'Same fertilizer treatment',{ 'text-anchor':'middle','font-size':13,fill:'#5d6577','font-weight':600});
+  [0,1,2].forEach(p=>{
+    const cx=110+p*190;
+    const g=el('g',{opacity:tech?0.35:1},s);
+    if(bio)el('rect',{x:cx-62,y:36,width:124,height:122,rx:14,fill:'#e2f0eb',stroke:'#1f6f5c','stroke-width':2},g);
+    // plant
+    el('line',{x1:cx,y1:140,x2:cx,y2:70,stroke:'#2f7d45','stroke-width':4},g);
+    [[-1,95],[1,85],[-1,75]].forEach(([d,y])=>el('ellipse',{cx:cx+d*18,cy:y,rx:18,ry:8,fill:'#46a35e',transform:`rotate(${d*-25} ${cx+d*18} ${y})`},g));
+    el('circle',{cx:cx+8,cy:110,r:6,fill:'#d6442f'},g);
+    el('path',{d:`M${cx-26} 140 h52 l-6 16 h-40z`,fill:'#a96b45'},g);
+    txt(g,cx,52,`Plant ${p+1}`,{'text-anchor':'middle','font-size':13,'font-weight':700,fill:bio?'#1f6f5c':'#1d2433'});
+    // leaf sample
+    el('line',{x1:cx,y1:160,x2:cx,y2:185,stroke:'#999','stroke-dasharray':'3 3'},s);
+    const lg=el('g',{opacity:tech?0.35:1},s);
+    el('ellipse',{cx,cy:198,rx:26,ry:11,fill:'#6bbf7e'},lg);
+    txt(lg,cx,202,'leaf',{'text-anchor':'middle','font-size':11,fill:'#fff','font-weight':600});
+    [0,1,2].forEach(m=>{
+      const mx=cx-50+m*50;
+      el('line',{x1:cx,y1:210,x2:mx,y2:246,stroke:'#999','stroke-dasharray':'3 3'},s);
+      const mg=el('g',{opacity:bio?0.35:1},s);
+      el('rect',{x:mx-22,y:248,width:44,height:30,rx:7,fill:tech?'#fff3dc':'#fff',stroke:tech?'#d08a1e':'#c9c3b5','stroke-width':tech?2:1},mg);
+      txt(mg,mx,268,q3data[p][m].toFixed(2),{'text-anchor':'middle','font-size':11,'font-family':'JetBrains Mono'});
+    });
+  });
+  txt(s,300,306,'Each box = one instrument reading (% N)',{'text-anchor':'middle','font-size':12,fill:'#5d6577'});
+  const means=q3data.map(r=>r.reduce((a,b)=>a+b)/3);
+  const sdW=Math.sqrt(q3data.flatMap((r,i)=>r.map(v=>(v-means[i])**2)).reduce((a,b)=>a+b)/6);
+  const gm=means.reduce((a,b)=>a+b)/3, sdB=Math.sqrt(means.map(m=>(m-gm)**2).reduce((a,b)=>a+b)/2);
+  $('#q3tbl').innerHTML=`<tr><th></th><th>Plant 1</th><th>Plant 2</th><th>Plant 3</th></tr><tr><td>Mean of 3 readings</td>${means.map(m=>`<td class="mono">${m.toFixed(2)}</td>`).join('')}</tr>`;
+  const msg={all:`<b>n = 3</b> biological replicates (plants), each measured <b>3×</b> (technical). Total readings = 9, but independent units = 3.`,
+             bio:`<b>Biological replicates = 3 plants.</b> Variation between plants (SD ≈ ${sdB.toFixed(2)}) is the variation that matters for treatment inference.`,
+             tech:`<b>Technical replicates = 3 per plant.</b> Readings from one leaf vary very little (SD ≈ ${sdW.toFixed(2)}) — they only show instrument precision.`};
+  $('#q3msg').innerHTML=msg[q3mode];
+}
+$$('#q3seg button').forEach(b=>b.onclick=()=>{$$('#q3seg button').forEach(x=>x.classList.toggle('on',x===b));q3mode=b.dataset.m;drawQ3()});
+$('#q3sim').onclick=()=>{simQ3();drawQ3()};
+simQ3();drawQ3();
+
+/* ===== Q4 ===== */
+const TEMP=['25°C','30°C','35°C','20°C','40°C'], UV=['Low','High','Medium','None','Very high'];
+let nt=2,nu=2;
+function drawQ4(){
+  $('#tN').textContent=nt;$('#uN').textContent=nu;
+  const g=$('#fgrid');g.style.gridTemplateColumns=`90px repeat(${nu},1fr)`;
+  let h='<div></div>'+UV.slice(0,nu).map(u=>`<div class="fhead" style="color:#d08a1e">UV ${u}</div>`).join('');
+  TEMP.slice(0,nt).forEach(t=>{h+=`<div class="fhead" style="align-self:center;color:#2f6db5">${t}</div>`+UV.slice(0,nu).map(u=>`<div class="fcell">🐟 ${t}<br>${u} UV</div>`).join('')});
+  g.innerHTML=h;$('#fCount').textContent=nt*nu;$('#fExpr').textContent=`treatment combinations = ${nt} × ${nu}`;
+}
+$$('.stepper button').forEach(b=>b.onclick=()=>{const d=+b.dataset.d;if(b.dataset.f==='t')nt=Math.min(5,Math.max(1,nt+d));else nu=Math.min(5,Math.max(1,nu+d));drawQ4()});
+$('#fReset').onclick=()=>{nt=2;nu=2;drawQ4()};
+drawQ4();
+
+/* ===== Q5 ===== */
+let q5=[1,1,1,2,2,2,3,3,3], q5sel=-1;
+function drawQ5(){
+  const s=$('#q5svg');s.innerHTML='';
+  q5.forEach((sp,i)=>{
+    const x=70+(i%3)*190+ (i>=0?0:0), y=20+Math.floor(i/3)*80;
+    const g=el('g',{class:'pot',transform:`translate(${x-50} ${y})`},s);
+    el('rect',{x:0,y:0,width:150,height:66,rx:12,fill:q5sel===i?'#e2f0eb':'#fff',stroke:q5sel===i?'#1f6f5c':'#e3dfd5','stroke-width':2},g);
+    el('path',{d:'M14 30 h36 l-5 26 h-26z',fill:COL[sp]},g);
+    el('line',{x1:32,y1:30,x2:32,y2:12,stroke:'#2f7d45','stroke-width':3},g);
+    el('ellipse',{cx:24,cy:16,rx:9,ry:4,fill:'#46a35e'},g);el('ellipse',{cx:40,cy:20,rx:9,ry:4,fill:'#46a35e'},g);
+    txt(g,62,28,`Pot ${i+1}`,{'font-size':14,'font-weight':700});
+    txt(g,62,48,`Species ${sp}`,{'font-size':12,fill:COL[sp],'font-weight':600});
+    g.onclick=()=>{q5sel=i;drawQ5();$('#q5msg').innerHTML=`<b>Pot ${i+1}</b> received <b>Species ${sp}</b>. This pot is one experimental unit; it is one of the 3 replicates of Species ${sp}.`};
+  });
+}
+$('#q5rand').onclick=()=>{q5=shuffle(q5);q5sel=-1;drawQ5();$('#q5msg').innerHTML='Randomized: each species still gets exactly <b>3 pots</b> — 3 treatments × 3 replicates = 9 experimental units.'};
+$('#q5sys').onclick=()=>{q5=[1,1,1,2,2,2,3,3,3];q5sel=-1;drawQ5();$('#q5msg').innerHTML='Systematic rows: fine only if conditions are truly uniform — randomization protects against hidden gradients (see Q5).'};
+drawQ5();
+
+/* ===== Q6 ===== */
+let q6mode='tank'; const q6reg=shuffle([1,1,1,1,2,2,2,2,3,3,3,3]);
+const fishPos=Array.from({length:12},()=>Array.from({length:10},()=>[10+Math.random()*90,22+Math.random()*44]));
+function drawQ6(){
+  const s=$('#q6svg');s.innerHTML='';
+  q6reg.forEach((r,i)=>{
+    const x=8+(i%4)*148, y=6+Math.floor(i/4)*98;
+    const g=el('g',{transform:`translate(${x} ${y})`},s);
+    el('rect',{x:0,y:0,width:136,height:86,rx:10,fill:'#eaf3fb',stroke:q6mode==='tank'?COL[r]:'#c9d6e3','stroke-width':q6mode==='tank'?4:1.5},g);
+    el('rect',{x:0,y:0,width:136,height:16,rx:8,fill:COL[r]},g);
+    txt(g,8,12,`Tank ${i+1} · R${r}`,{'font-size':10,fill:'#fff','font-weight':700});
+    fishPos[i].forEach(([fx,fy])=>{
+      const f=el('g',{transform:`translate(${fx} ${fy})`},g);
+      el('ellipse',{cx:8,cy:6,rx:8,ry:4,fill:q6mode==='fish'?'#e07a2c':'#8aa0b5'},f);
+      el('path',{d:'M0 6 l-5 -4 v8z',fill:q6mode==='fish'?'#e07a2c':'#8aa0b5'},f);
+      if(q6mode==='fish')el('circle',{cx:8,cy:6,r:9,fill:'none',stroke:'#e07a2c','stroke-width':1,opacity:.6},f);
+    });
+  });
+  if(q6mode==='tank'){$('#q6n').textContent='12';$('#q6lbl').textContent='tanks (experimental units)';$('#q6msg').className='callout good';$('#q6msg').innerHTML='Feeding regime is applied to the <b>tank</b>. 12 tanks ÷ 3 regimes = <b>4 independent replicates per regime</b>.'}
+  else{$('#q6n').textContent='120';$('#q6lbl').textContent='fish (observational units)';$('#q6msg').className='callout bad';$('#q6msg').innerHTML='120 fish are <b>measured</b>, but fish in one tank share the same food delivery, water and environment. Analysing n = 120 (40 per regime) is <b>pseudoreplication</b> — still only 4 replicates per regime.'}
+}
+$$('#q6seg button').forEach(b=>b.onclick=()=>{$$('#q6seg button').forEach(x=>x.classList.toggle('on',x===b));q6mode=b.dataset.m;drawQ6()});
+drawQ6();
+
+/* ===== Q7 ===== */
+// 3 columns by distance from window (col 0 near, 1 middle, 2 far) x 4 rows = 12 plants
+let q7mode='orig', q7lay=null, q7res=null;
+const FL={1:'A',2:'B',3:'C'}, FC={1:'#2f6db5',2:'#8a3fa6',3:'#d08a1e'}; // A blue, B purple, C orange
+function layout(m){
+  if(m==='orig')return [0,1,2].map(c=>Array(4).fill(c===0?1:c===1?3:2)); // near=A, middle=C, far=B
+  if(m==='crd'){const a=shuffle([1,1,1,1,2,2,2,2,3,3,3,3]);return [0,1,2].map(c=>a.slice(c*4,c*4+4))}
+  // RCBD: blocks = rows across distance? Block by distance: each column (distance) contains all fertilizers
+  return [0,1,2].map(()=>shuffle([1,2,3,[1,2,3][Math.floor(Math.random()*3)]]));
+}
+function fixRcbd(L){ // ensure balanced 4 each overall
+  const all=[1,1,1,1,2,2,2,2,3,3,3,3];
+  // each distance column: 1,2,3 + one extra; make extras 1,2,3 -> one column gets... 3 cols extras must be distinct
+  const ex=shuffle([1,2,3]);return [0,1,2].map(c=>shuffle([1,2,3,ex[c]]));
+}
+function drawQ7(){
+  const s=$('#q7svg');s.innerHTML='';
+  // window
+  el('rect',{x:0,y:10,width:40,height:250,rx:6,fill:'#fff6c9',stroke:'#e4c84a'},s);
+  txt(s,20,140,'WINDOW',{'text-anchor':'middle','font-size':11,'font-weight':700,fill:'#9b7d0c',transform:'rotate(-90 20 140)'});
+  // light gradient
+  const d=el('defs',{},s), lg=el('linearGradient',{id:'lg',x1:0,x2:1},d);
+  el('stop',{offset:0,'stop-color':'#fff2a8','stop-opacity':.9},lg);el('stop',{offset:1,'stop-color':'#fff2a8','stop-opacity':0},lg);
+  el('rect',{x:40,y:10,width:560,height:250,fill:'url(#lg)'},s);
+  ['Near window','Middle','Far from window'].forEach((n,c)=>{
+    const cx=130+c*180;
+    if(q7mode==='rcbd')el('rect',{x:cx-80,y:14,width:160,height:242,rx:10,fill:'none',stroke:'#1f6f5c','stroke-dasharray':'5 4','stroke-width':1.5},s);
+    txt(s,cx,32,n+(q7mode==='rcbd'?' (block)':''),{'text-anchor':'middle','font-size':12,'font-weight':700,fill:'#5d6577'});
+    q7lay[c].forEach((f,r)=>{
+      const y=46+r*52;
+      const hgt=q7res?Math.max(8,Math.min(42,q7res[c][r]/3)):22;
+      const g=el('g',{transform:`translate(${cx-22} ${y})`},s);
+      el('rect',{x:0,y:0,width:44,height:46,rx:8,fill:'#fff',stroke:FC[f],'stroke-width':2.5},g);
+      el('line',{x1:14,y1:42,x2:14,y2:42-hgt,stroke:'#2f7d45','stroke-width':3},g);
+      el('ellipse',{cx:14,cy:42-hgt,rx:6,ry:4,fill:'#46a35e'},g);
+      txt(g,32,28,FL[f],{'text-anchor':'middle','font-size':16,'font-weight':700,fill:FC[f]});
+    });
+  });
+}
+function grow(){
+  const equal=$('#q7eq').checked;
+  const light=[40,20,0], fert={1:equal?0:6,2:equal?0:0,3:equal?0:3};
+  q7res=q7lay.map((col,c)=>col.map(f=>60+light[c]+fert[f]+randn()*5));
+  const sums={1:[],2:[],3:[]};q7lay.forEach((col,c)=>col.forEach((f,r)=>sums[f].push(q7res[c][r])));
+  const means={1:0,2:0,3:0};for(const k in sums)means[k]=sums[k].reduce((a,b)=>a+b)/sums[k].length;
+  drawQ7();
+  const b=$('#q7bar');b.innerHTML='';
+  txt(b,0,14,'Mean plant height (cm) per fertilizer',{'font-size':12,'font-weight':700,fill:'#5d6577'});
+  const mx=Math.max(...Object.values(means),110);
+  [1,2,3].forEach((f,i)=>{
+    const y=28+i*44, w=(means[f]/mx)*440;
+    txt(b,0,y+22,'Fertilizer '+FL[f],{'font-size':13,'font-weight':600,fill:FC[f]});
+    const bar=el('rect',{x:110,y,width:0,height:30,rx:6,fill:FC[f]},b);requestAnimationFrame(()=>{bar.style.transition='width .6s ease-out';bar.setAttribute('width',w);bar.style.width=w+'px'});
+    txt(b,116+w,y+20,means[f].toFixed(1),{'font-size':12,'font-family':'JetBrains Mono'});
+  });
+  const best=[1,2,3].sort((a,b)=>means[b]-means[a])[0];
+  const m=$('#q7msg');
+  if(q7mode==='orig'){m.className='callout bad';m.innerHTML=`Fertilizer <b>${FL[best]}</b> “wins” — ${equal?'yet all fertilizers are identical here!':''} Its advantage comes from the <b>window light</b>, not the fertilizer. Fertilizer and light are <b>confounded</b>.`}
+  else if(q7mode==='crd'){m.className='callout good';m.innerHTML=`Randomization spreads each fertilizer across light conditions, so light no longer systematically favours one fertilizer. ${equal?'Differences between means are now mostly random noise.':''} Press again: the “winner” changes from run to run.`}
+  else{m.className='callout good';m.innerHTML=`Blocking: every distance zone contains A, B and C, so each fertilizer experiences near, middle and far positions. Light variation is <b>controlled</b> and can be removed as a block effect in the analysis.`}
+}
+$$('#q7seg button').forEach(b=>b.onclick=()=>{$$('#q7seg button').forEach(x=>x.classList.toggle('on',x===b));q7mode=b.dataset.m;q7lay=q7mode==='rcbd'?fixRcbd():layout(q7mode);q7res=null;drawQ7();$('#q7bar').innerHTML='';$('#q7msg').className='callout';$('#q7msg').textContent='Press “Grow for 4 weeks” to see the results.'});
+$('#q7run').onclick=()=>{if(q7mode!=='orig')q7lay=q7mode==='rcbd'?fixRcbd():layout(q7mode);grow()};
+q7lay=layout('orig');drawQ7();
+</script>
+</body>
+</html>
